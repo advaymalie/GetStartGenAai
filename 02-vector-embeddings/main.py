@@ -17,3 +17,4 @@ response = client.embeddings.create(
 )
 
 print("Vector Embeddings:", response)
+print("Len:", len(response.data[0].embedding))
