@@ -12,8 +12,13 @@ client = OpenAI()
 
 response = client.chat.completions.create(
     model="gpt-4.1-mini",
-    messages=[
-        {"role": "user", "content": "Hello there"}
+    messages=[ 
+        {"role": "user", "content": "My Name is Advay"},
+        {"role": "assistant", "content": "Hi Advay! How can I assist you today?"},
+        {"role": "user", "content": "What's My Name?"},
+        {"role": "assistant", "content": "Your name is Advay. How can I help you further?"},
+        {"role": "user", "content": "HoW are you?"},
+
     ]
 )
 
