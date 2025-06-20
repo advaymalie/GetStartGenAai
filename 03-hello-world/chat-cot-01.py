@@ -1,5 +1,6 @@
 import os
 from openai import OpenAI
+from google.generativeai as genai
 from dotenv import load_dotenv
 import json
 
@@ -10,10 +11,12 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI()
+# client = genai.Client()
+gemini_client = genai.Client()
 
 
-# Chain of thoughts - The model is encouraged to break down reasoning step by step before arriving at answer, 
-# This is manual setup 
+# Chain Of Thought: The model is encouraged to break down reasoning step by step before arriving at an answer.
+
 SYSTEM_PROMPT = """
    You are an useful AI assistant specialized in anaswering user queries
    Before answering any query first perform analyis and identify signifiant problems or aspects associated with query and break it down step by step
@@ -58,25 +61,45 @@ SYSTEM_PROMPT = """
     Output: {{ "step": "think", "content": "Now as I have already solved 5 / 3 now the equation looks lik 2 + 2 * 1.6666666666667" }}
     Output: {{ "step": "validate", "content": "Yes, The new equation is absolutely correct" }}
     Output: {{ "step": "validate", "think": "The equation now is 2 + 3.33333333333" }}
-    and so on.....
-
-
-        
+    and so on.....      
 """
 
-response = client.chat.completions.create(
-    model="gpt-4.1-mini",
-    response_format={"type":"json_object"},
-    messages=[ 
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": "What is 5/2 * 3 to the power of 4"},
-        {"role": "assistant", "content": json.dumps({ "step": "analyse", "content": "The user is interested in solving a mathematical expression containing division, multiplication and exponentiation operations: 5/2 * 3^4." })},
-        {"role": "assistant", "content": json.dumps({"step": "think", "content": "To solve 5/2 * 3^4, I must follow the order of operations (BODMAS/BIDMAS): first calculate the exponent (3^4), then perform the division and multiplication from left to right."})},
-        {"role": "assistant", "content": json.dumps({"step": "output", "content": "First calculate 3^4, which is 3 * 3 * 3 * 3 = 81. Then calculate 5/2 = 2.5. Finally multiply 2.5 * 81 = 202.5."})},
-        {"role": "assistant", "content": json.dumps({"step": "validate", "content": "The steps are consistent with the order of operations rule, and the calculations for 3^4 and 5/2 are correct. The multiplication result 2.5 * 81 equals 202.5, so this answer is accurate."})},
-        {"role": "assistant", "content": json.dumps({"step": "result", "content": "The value of the expression 5/2 * 3^4 is 202.5. This was calculated by first evaluating the exponent to get 81, then calculating 5 divided by 2 to get 2.5, and finally multiplying these two results."})},
-    ]
-    
-)
 
-print("\n\n🤖=>", response.choices[0].message.content, "\n")
+messages = [
+    {"role": "system", "content": SYSTEM_PROMPT}
+]
+
+gmodel = genai.GenerativeModel(
+        'gemini-1.5-flash-latest',
+        generation_config=generation_config
+    )
+query = input(" >")
+messages.append({"role": "user", "content": query })
+
+# User will ask the query, assitant will respond, we will send assistant
+while True:
+    response = client.chat.completions.create(
+        model="gpt-4.1",
+        response_format={"type": "json_object"},
+        messages=messages
+    )
+
+    messages.append({"role": "assistant", "content": response.choices[0].message.content})
+    parsed_response = json.loads(response.choices[0].message.content)
+    # We can use separate model for separate steps like call claude for think - multi-model agent
+
+    # if parsed_response.get("step") == "think":
+    #     gemini_response = gemini_client.GenerativeModel.generate_content(
+    #         model="gemini-2.0-flash", 
+    #         contents=messages,
+    #         generation_config=generation_config
+    #     )
+    #     messages.append({"role": "assistant", "content": response.text})
+    #     continue
+    
+    if parsed_response.get("step") != "result":
+        print(" 🧠🧠: ", parsed_response.get("content"))
+        continue
+
+    print(" 🤖: ", parsed_response.get("content"))
+    break
