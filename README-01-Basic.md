@@ -69,3 +69,5 @@ A vector embedding is a list of numbers (a vector) that represents a piece of te
 * **Vector Embedding Visualizer:** <https://projector.tensorflow.org/>
 * **The "Attention Is All You Need" Paper:** <https://research.google/pubs/attention-is-all-you-need/>
 * **V0 System Prompt Examples:** [Link to GitHub](https://github.com/2-fly-4-ai/V0-system-prompt/blob/main/v0-system-prompt(updated%2022-11-2024\))
+* **Cursor prompts for reference:** [CURSOR PROMPTS](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/tree/main/Cursor%20Prompts)
+* **RAG:** [RAG](https://aws.amazon.com/what-is/retrieval-augmented-generation/)
