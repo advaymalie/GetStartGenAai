@@ -1,4 +1,4 @@
-# The Art of Writing Prompts: A Simple Guide
+# Writing Prompts: A Simple Guide
 
 Think of a Large Language Model (LLM) like a very powerful car engine. The prompt is the instruction you give the driver. A vague instruction like "Go north" will lead to a confusing journey. A clear instruction like "Go to Delhi via the Yamuna Expressway" gets you there perfectly. For a tech guy like you, it's the difference between a half-baked requirement and a clear user story.
 
