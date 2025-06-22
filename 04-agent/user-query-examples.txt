@@ -1,0 +1,5 @@
+1. what is the weather of Kolhapur?
+2. what is the weather of Kolhapur and London?
+3. What is the average temperature of Kolhapur and London?
+4. What is the weather of Kolhapur? Write the output in weather.text
+5. Create todo web app

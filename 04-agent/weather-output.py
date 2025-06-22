@@ -5,18 +5,16 @@ from datetime import datetime
 from dotenv import load_dotenv
 import json
 import requests
+import os
 load_dotenv()
 
 client = OpenAI()
 
-# Add context in prompt to return the required dynamic data, otherwise LLM can't have the context
-# If we don't add  context it will return static answer
-# SYSTEM_PROMPT = f"""
-#     You are a helpful AI assistant
-#     Today's date is {datetime.now()}
-#     Cape Town's weather is  32 degrees
-# """
-#
+
+def run_command(cmd: str):
+    result = os.system(cmd)
+    return result
+
 
 # Prompt with weather context using tool
 SYSTEM_PROMPT = f"""
@@ -42,6 +40,7 @@ SYSTEM_PROMPT = f"""
     }}
     Available tools
     - "get_weather": gets city name as an input and returns the current weather for the city
+    - "run_command": Takes linux command as a string and execute comamnds and returns execution output
 
     Example:
     User Query: What is the weather of Cape Town?
@@ -65,7 +64,8 @@ def get_weather(city: str):
 
 
 available_tools = {
-    "get_weather": get_weather
+    "get_weather": get_weather,
+    "run_command": run_command
 }
 
 messages = [
